@@ -42,5 +42,5 @@ Be sure to leave any bugs that occur during use in an issue.
 - Tested on 'Apple M1 Pro'.
 - Tested on 'mac os ventura 13.1'.
 - I don't know how it works on Intel CPUs.
-- The distributed dmg was built based on my MacBook.
 - I don't know how it works on older versions of the OS.
+- The distributed dmg was built based on my MacBook.
