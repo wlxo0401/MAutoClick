@@ -19,13 +19,6 @@
 # About
 This is a project started to study SwiftUI. Because it is a toy project, there are many bugs that could not be found. Please let me know if you find any bugs.
 
-# Caution
-- Tested on 'Apple M1 Pro'.
-- Tested on 'mac os ventura 13.1'.
-- I don't know how it works on Intel CPUs.
-- The distributed dmg was built based on my MacBook.
-- I don't know how it works on older versions of the OS.
-
 ## Be sure to leave any bugs that occur during use in an issue.
 
 # Tech Stack
@@ -37,3 +30,11 @@ This is a project started to study SwiftUI. Because it is a toy project, there a
 - Click the mouse at the desired location.
 - Delay can be given for each action.
 - You can specify any number of repeats you want.
+
+
+# Caution
+- Tested on 'Apple M1 Pro'.
+- Tested on 'mac os ventura 13.1'.
+- I don't know how it works on Intel CPUs.
+- The distributed dmg was built based on my MacBook.
+- I don't know how it works on older versions of the OS.
