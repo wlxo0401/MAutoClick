@@ -7,15 +7,16 @@
 
 import SwiftUI
 
+
 @main
 struct MAutoClickApp: App {
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(width: 500, height: 350)
+                .frame(width: 700, height: 350)
         }
         .windowResizabilityContentSize()
-        
     }
 }
 

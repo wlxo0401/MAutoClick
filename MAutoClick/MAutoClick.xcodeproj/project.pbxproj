@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3985AD3E299E69C9009395A2 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 3985AD3D299E69C9009395A2 /* KeyboardShortcuts */; };
 		399765F5299C5B2F00C8511B /* MAutoClickApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399765F4299C5B2F00C8511B /* MAutoClickApp.swift */; };
 		399765F7299C5B2F00C8511B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399765F6299C5B2F00C8511B /* ContentView.swift */; };
 		399765F9299C5B3000C8511B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 399765F8299C5B3000C8511B /* Assets.xcassets */; };
@@ -27,6 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3985AD3E299E69C9009395A2 /* KeyboardShortcuts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +87,9 @@
 			dependencies = (
 			);
 			name = MAutoClick;
+			packageProductDependencies = (
+				3985AD3D299E69C9009395A2 /* KeyboardShortcuts */,
+			);
 			productName = MAutoClick;
 			productReference = 399765F1299C5B2F00C8511B /* MAutoClick.app */;
 			productType = "com.apple.product-type.application";
@@ -113,6 +118,9 @@
 				Base,
 			);
 			mainGroup = 399765E8299C5B2F00C8511B;
+			packageReferences = (
+				3985AD3C299E69C9009395A2 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+			);
 			productRefGroup = 399765F2299C5B2F00C8511B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -342,6 +350,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3985AD3C299E69C9009395A2 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3985AD3D299E69C9009395A2 /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3985AD3C299E69C9009395A2 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
+			productName = KeyboardShortcuts;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 399765E9299C5B2F00C8511B /* Project object */;
 }

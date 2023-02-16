@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 struct ContentView: View {
     // 작업 구조체
     struct InputUserAction: Hashable {
@@ -16,16 +14,16 @@ struct ContentView: View {
         let locationX: Double
         let locationY: Double
         let delay: Double
-        let mode: TaskType
+        let action: ActionType
     }
 
     // 작업 종류
-    enum TaskType: String {
+    enum ActionType: String {
         case move
         case click
         case delay
         
-        var modeName: String {
+        var actionName: String {
             switch self {
             case .move:
                 return "Move"
@@ -63,38 +61,46 @@ struct ContentView: View {
     @State var selectedItem: UUID?
     
     
-    
     // 0
-    @State var moveMode: Bool = false
+    @State var actionMove: Bool = false
     // 1
-    @State var clickMode: Bool = false
+    @State var actionClick: Bool = false
+    // Auto Location Input Mode
+    @State var autoLocation: Bool = false
     // add 실패 Alert 변수
     @State var isShowAddFailAlert: Bool = false
     // start 실패 Alert 변수
     @State var isShowStartFailAlert: Bool = false
     
+    
+    //MARK: - 메인 몸통
     var body: some View {
-        
-        ZStack {
-            
-            VStack(spacing: 0) {
-                HStack(spacing: 0) {
-                    self.settingsView()
-                    self.taskListView()
-                }
-                
-                
+        VStack {
+            HStack(spacing: 0) {
+                self.baseFunctionView()
+                    .frame(width: 300)
+                Divider()
+                self.appSettingView()
+                    .frame(width: 200)
+                Divider()
+                self.taskListView()
+                    .frame(width: 200)
             }
         }
-        .frame(width: 500, height: 350)
-        
+        .frame(width: 700, height: 350)
     }
+}
+
+//MARK: - 3 마디 부분
+extension ContentView {
     
+    //MARK: - 왼쪽 기본 기능 부분
     @ViewBuilder
-    private func settingsView() -> some View {
+    private func baseFunctionView() -> some View {
         VStack(spacing: 0) {
             
             self.mouseLocationView()
+                
            
             Divider()
             
@@ -145,7 +151,6 @@ struct ContentView: View {
             .frame(minWidth: 0, maxWidth: .infinity)
             .padding(.all)
         }
-        .frame(width: 300)
         .onAppear(perform: {
             NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved]) {
                 self.mouseLocationX = self.mouseLocation.x
@@ -154,6 +159,15 @@ struct ContentView: View {
             }
         })
     }
+    
+    //MARK: - 가운데 앱 설정 부분
+    @ViewBuilder
+    private func appSettingView() -> some View {
+        VStack {
+            Text("Hi")
+        }
+    }
+    
     
     // 마우스 위치 표시 화면
     @ViewBuilder
@@ -181,7 +195,7 @@ struct ContentView: View {
     // Action View
     @ViewBuilder
     private func actionView() -> some View {
-        Text("Action")
+        Text("Auto Action")
             .font(.system(size: 14, weight: .bold))
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
             .padding(.top, 8)
@@ -189,7 +203,7 @@ struct ContentView: View {
         
         HStack {
             VStack {
-                TextField("LocationX", value: $inputLocationX, format: .number)
+                TextField("LocationX", value: $mouseLocationX, format: .number)
                     .padding(.leading, 8)
                     .textFieldStyle(.roundedBorder)
 
@@ -199,14 +213,14 @@ struct ContentView: View {
             }
 
             Button {
-                if !self.clickMode && !self.moveMode {
+                if !self.actionClick && !self.actionMove {
                     self.isShowAddFailAlert = true
                     return
                 }
                 let inputData = InputUserAction(locationX: self.inputLocationX,
                                                 locationY: self.inputLocationY,
                                                 delay: 0.0,
-                                                mode: self.moveMode ? .move : .click)
+                                                action: self.actionMove ? .move : .click)
                 self.userTaskList.append(inputData)
             } label: {
                 Text("Add")
@@ -219,17 +233,20 @@ struct ContentView: View {
             } message: {
                 Text("Please choose mode!")
             }
+            .keyboardShortcut("s", modifiers: [.command, .shift])
+            
+            
         }
         .padding(.top, 5)
         HStack {
-            Toggle("Move Mode", isOn: $moveMode)
-                .onChange(of: self.moveMode) { newValue in
-                    self.clickMode = !newValue
+            Toggle("Move Mode", isOn: $actionMove)
+                .onChange(of: self.actionMove) { newValue in
+                    self.actionClick = !newValue
                     
                 }
-            Toggle("Click Mode", isOn: $clickMode)
-                .onChange(of: self.clickMode) { newValue in
-                    self.moveMode = !newValue
+            Toggle("Click Mode", isOn: $actionClick)
+                .onChange(of: self.actionClick) { newValue in
+                    self.actionMove = !newValue
                 }
         }
     }
@@ -251,7 +268,7 @@ struct ContentView: View {
                 let inputData = InputUserAction(locationX: 0,
                                                 locationY: 0,
                                                 delay: self.inputDelay,
-                                                mode: .delay)
+                                                action: .delay)
                 self.userTaskList.append(inputData)
             } label: {
                 Text("Add")
@@ -288,15 +305,15 @@ struct ContentView: View {
         self.userTaskList.remove(atOffsets: offsets)
     }
     
-    // 리스트
+    //MARK: - 오른쪽 리스트
     @ViewBuilder
     private func taskListView() -> some View {
         
         VStack(spacing: 0) {
             List {
                 ForEach(Array(self.userTaskList.enumerated()), id: \.offset) { index, element in
-                    if element.mode == .move || element.mode == .click {
-                        self.listActionCellView(indexNumber: index, uuid: element.uuid, locationX: element.locationX, locationY: element.locationY, mode: element.mode == .move ? "Move" : "Click")
+                    if element.action == .move || element.action == .click {
+                        self.listActionCellView(indexNumber: index, uuid: element.uuid, locationX: element.locationX, locationY: element.locationY, mode: element.action == .move ? "Move" : "Click")
                     } else {
                         self.listDelayCellView(indexNumber: index, uuid: element.uuid, delay: element.delay)
                     }
@@ -356,7 +373,6 @@ struct ContentView: View {
             .padding(.all)
         }
         .frame(minHeight: 0, maxHeight: .infinity)
-        .frame(width: 200)
     }
     
     // 동작 Cell
@@ -448,9 +464,7 @@ struct ContentView: View {
             
             
             for action in self.userTaskList {
-                
-                
-                switch action.mode {
+                switch action.action {
                 case .move:
                     
                     if let screen = NSScreen.main {
@@ -493,9 +507,6 @@ struct ContentView: View {
                 }
                 
             }
-            
-            print("count : \(self.runRepeat)")
-            
             if self.runRepeat == self.inputRepeat {
                 break
             }
@@ -504,74 +515,11 @@ struct ContentView: View {
         
         
     }
-    
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
 }
-
-
-
-
-
-//            VStack {
-//
-//                Image(systemName: "clock").resizable().frame(width: 200, height: 200)
-//                            .onHover { over in
-//                                overImg = over
-//                            }
-//                            .onAppear(perform: {
-//                                NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved]) {
-//                                    if overImg {
-//                                        print("mouse: \(self.mouseLocation.x) \(self.mouseLocation.y)")
-//                                    }
-//                                    return $0
-//                                }
-//                            })
-//
-//                GeometryReader { geometry in
-//                    VStack {
-//                        Text("\(geometry.size.width) x \(geometry.size.height)")
-//                    }.frame(width: geometry.size.width, height: geometry.size.height)
-//                }
-//
-//                Text("Mouse \nLocationX : \(mouseLocation.x), \nLocationY : \(mouseLocation.y)")
-//
-//
-//                Button {
-//
-//                    if let screen = NSScreen.main {
-//                        let rect = screen.frame
-//                        let height = rect.size.height
-//                        let width = rect.size.width
-//
-//                        let source = CGEventSource.init(stateID: .hidSystemState)
-////                        let position = NSPoint(x: 1521.18, y: height - 1570.183)
-////                        let position = NSPoint(x: 1521.18, y: height - 1672.281)
-//                        let position = CGPoint(x: 848, y: height - 435)
-//
-//                        print(CGPoint(x: mouseLocation.x, y: height - mouseLocation.y))
-//                        let eventDown = CGEvent(mouseEventSource: source, mouseType: .leftMouseDown, mouseCursorPosition: position , mouseButton: .left)
-//
-//
-//                        let positionTwo = CGPoint(x: 800, y: height - 435)
-//                        let eventMove = CGEvent(mouseEventSource: source, mouseType: .leftMouseDragged, mouseCursorPosition: positionTwo , mouseButton: .left)
-//
-//                        let eventUp = CGEvent(mouseEventSource: source, mouseType: .leftMouseUp, mouseCursorPosition: positionTwo , mouseButton: .left)
-//
-//                        eventDown?.post(tap: .cghidEventTap)
-//                        usleep(500_000)
-//                        eventMove?.post(tap: .cghidEventTap)
-//                        usleep(500_000)
-//                        eventUp?.post(tap: .cghidEventTap)
-//                    }
-//
-//
-//                } label: {
-//                    Text("나를 눌러")
-//                }
-//
-//            }
