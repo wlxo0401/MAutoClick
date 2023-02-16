@@ -57,9 +57,9 @@ struct ContentView: View {
     // 작업 리스트
     @State var userTaskList: [InputUserAction] = []
     
+    @State var selectedIndex: Int?
     
-    // 선택된 item
-    @State var selectedItem: Int?
+    
     
     // 0
     @State var moveMode: Bool = false
@@ -330,6 +330,10 @@ struct ContentView: View {
 
     }
     
+    private func deleteAction(at offsets: IndexSet) {
+        self.userTaskList.remove(atOffsets: offsets)
+    }
+    
     // 리스트
     @ViewBuilder
     private func taskListView() -> some View {
@@ -339,52 +343,45 @@ struct ContentView: View {
             
             List(self.userTaskList, id: \.self) {
                 
-                ZStack {
-                    if $0.mode == .move || $0.mode == .click {
-                        self.listActionCellView(indexNumber: $0.index, locationX: $0.locationX, locationY: $0.locationY, mode: $0.mode == .move ? "Move" : "Click")
-                    } else {
-                        self.listDelayCellView(indexNumber: $0.index, delay: $0.delay)
-                    }
-                        
-//                    
-//                    Button {
-//                        self.selectedItem = $0.index
-//                    }
-//                    .background(.red)
+                
+                if $0.mode == .move || $0.mode == .click {
+                    self.listActionCellView(indexNumber: $0.index, locationX: $0.locationX, locationY: $0.locationY, mode: $0.mode == .move ? "Move" : "Click")
+                } else {
+                    self.listDelayCellView(indexNumber: $0.index, delay: $0.delay)
                 }
                 
             }
             .frame(minHeight: 0, maxHeight: .infinity)
             
-            HStack {
-                
-                Button {
-                    print("Hi")
-                } label: {
-                    Text("UP")
-                }
-                
-                Button {
-                    print("Hi")
-                } label: {
-                    Text("Down")
-                }
-                
-                Button {
-                    print("Hi")
-                    
-//                    if let action = self.selectedItem {
-//                        self.userTaskList.remove
-//                    }
+//            HStack {
 //
-                } label: {
-                    
-                    Text("Delete")
-                }
-            }
-            .frame(height: 10)
-            .frame(minWidth: 0, maxWidth: .infinity)
-            .padding(.all)
+//                Button {
+//                    print("Hi")
+//                } label: {
+//                    Text("UP")
+//                }
+//
+//                Button {
+//                    print("Hi")
+//                } label: {
+//                    Text("Down")
+//                }
+//
+//                Button {
+//                    print("Hi")
+//
+////                    if let action = self.selectedItem {
+////                        self.userTaskList.remove
+////                    }
+////
+//                } label: {
+//
+//                    Text("Delete")
+//                }
+//            }
+//            .frame(height: 10)
+//            .frame(minWidth: 0, maxWidth: .infinity)
+//            .padding(.all)
         }
         .frame(minHeight: 0, maxHeight: .infinity)
         .frame(width: 200)
@@ -394,29 +391,49 @@ struct ContentView: View {
     @ViewBuilder
     private func listActionCellView(indexNumber: Int, locationX: Double, locationY: Double, mode: String) -> some View {
         
-        HStack {
-            Text("\(indexNumber)")
-            
-            Divider()
-            
-            VStack(spacing: 0) {
-                Text("X : \(locationX)")
-                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-                    .fontWeight(.semibold)
-                Text("Y : \(locationY)")
-                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-                    .fontWeight(.semibold)
-                Text("Mode : \(mode)")
-                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-                    .fontWeight(.semibold)
+        ZStack {
+            HStack {
+                Text("\(indexNumber)")
+                
+                Divider()
+                
+                VStack(spacing: 0) {
+                    Text("X : \(locationX)")
+                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+                        .fontWeight(.semibold)
+                    Text("Y : \(locationY)")
+                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+                        .fontWeight(.semibold)
+                    Text("Mode : \(mode)")
+                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+                        .fontWeight(.semibold)
+                }
+                .frame(minWidth: 0, maxWidth: .infinity)
+                .padding(.all, 4)
+                .background(self.selectedColor(currentIndex: indexNumber))
+                .cornerRadius(5)
             }
-            .frame(minWidth: 0, maxWidth: .infinity)
-            .padding(.all, 4)
-            .background(.gray)
-            .cornerRadius(5)
+            .onTapGesture {
+                self.indexCheck(indexNumber: indexNumber)
+            }
         }
+       
         
     }
+    
+    
+    private func selectedColor(currentIndex: Int) -> Color {
+        if let index = self.selectedIndex {
+            if index == currentIndex {
+                return .blue
+            } else {
+                return .gray
+            }
+        } else {
+            return .gray
+        }
+    }
+    
     
     // 지연 Cell
     @ViewBuilder
@@ -430,11 +447,24 @@ struct ContentView: View {
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
                 .fontWeight(.semibold)
                 .padding(.all, 4)
-                .background(.gray)
+                .background(self.selectedColor(currentIndex: indexNumber))
                 .cornerRadius(5)
         }
-        
-        
+        .onTapGesture {
+            self.indexCheck(indexNumber: indexNumber)
+        }
+    }
+    
+    private func indexCheck(indexNumber: Int) {
+        if let index = self.selectedIndex {
+            if index == indexNumber {
+                self.selectedIndex = nil
+            } else {
+                self.selectedIndex = indexNumber
+            }
+        } else {
+            self.selectedIndex = indexNumber
+        }
     }
     
 }
