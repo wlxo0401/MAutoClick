@@ -95,3 +95,5 @@ MyAssetRecord/Pods/*
 **/.DS_Store
 
 ALOA/bringgo-enf-engine
+
+**/.entitlements
