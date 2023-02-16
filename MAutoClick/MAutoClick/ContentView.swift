@@ -452,6 +452,16 @@ struct ContentView: View {
                 
                 switch action.mode {
                 case .move:
+                    
+                    if let screen = NSScreen.main {
+                        let rect = screen.frame
+                        let height = rect.size.height
+                        
+                        let source = CGEventSource.init(stateID: .hidSystemState)
+                        let position = CGPoint(x: action.locationX, y: height - action.locationY)
+                        let eventMove = CGEvent(mouseEventSource: source, mouseType: .leftMouseDragged, mouseCursorPosition: position, mouseButton: .left)
+                        eventMove?.post(tap: .cghidEventTap)
+                    }
                     print("move")
                 case .click:
                     print("click")
