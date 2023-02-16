@@ -16,10 +16,16 @@
 
 
 
+
 # About
 This is a project started to study SwiftUI. Because it is a toy project, there are many bugs that could not be found. Please let me know if you find any bugs.
 
-## Be sure to leave any bugs that occur during use in an issue.
+# Download
+<h3>
+    <a href="https://github.com/wlxo0401/MAutoClick/releases/download/Ver0.9/MAutoClick_0.9.dmg">Download Latest Version</a>
+</h3>
+
+Be sure to leave any bugs that occur during use in an issue.
 
 # Tech Stack
 - Swift
