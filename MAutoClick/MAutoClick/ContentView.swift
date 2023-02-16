@@ -475,10 +475,8 @@ struct ContentView: View {
                         let eventDown = CGEvent(mouseEventSource: source, mouseType: .leftMouseDown, mouseCursorPosition: position , mouseButton: .left)
                         let eventUp = CGEvent(mouseEventSource: source, mouseType: .leftMouseUp, mouseCursorPosition: position , mouseButton: .left)
                         
-                        let eventDownn = CGEvent(mouseEventSource: source, mouseType: .leftMouseDown, mouseCursorPosition: position , mouseButton: .left)
                         eventDown?.post(tap: .cghidEventTap)
-                        eventDownn?.post(tap: .cghidEventTap)
-//                        eventUp?.post(tap: .cghidEventTap)
+                        eventUp?.post(tap: .cghidEventTap)
                     }
                     
                     print("click")

@@ -1,61 +1,61 @@
 {
   "images" : [
     {
-      "filename" : "Frame 41033.png",
+      "filename" : "ico_16.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "16x16"
     },
     {
-      "filename" : "Frame 41032.png",
+      "filename" : "ico_32 1.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "16x16"
     },
     {
-      "filename" : "Frame 41031.png",
+      "filename" : "ico_32.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "32x32"
     },
     {
-      "filename" : "Frame 41030.png",
+      "filename" : "ico_64.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "32x32"
     },
     {
-      "filename" : "Frame 41029.png",
+      "filename" : "ico_128.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "128x128"
     },
     {
-      "filename" : "Frame 41028.png",
+      "filename" : "ico_256 1.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "128x128"
     },
     {
-      "filename" : "Frame 41027.png",
+      "filename" : "ico_256.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "256x256"
     },
     {
-      "filename" : "Frame 41026.png",
+      "filename" : "ico_512 1.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "256x256"
     },
     {
-      "filename" : "Frame 41025.png",
+      "filename" : "ico_512.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "512x512"
     },
     {
-      "filename" : "Frame 41024.png",
+      "filename" : "ico_1024.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "512x512"
