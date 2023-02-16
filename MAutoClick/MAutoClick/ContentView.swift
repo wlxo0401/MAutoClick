@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-struct InputLocationCoordinate {
+struct InputLocationCoordinate: Hashable {
     let locationX: Double
     let locationY: Double
+    let mode: Int
 }
 
 
@@ -28,18 +29,12 @@ struct ContentView: View {
     
     @State var userTaskList: [InputLocationCoordinate] = []
     
-    @State var moveMode: Bool = false {
-        didSet {
-            self.clickMode = false
-            print(clickMode, moveMode)
-        }
-    }
-    @State var clickMode: Bool = false {
-        didSet {
-            self.moveMode = false
-            print(clickMode, moveMode)
-        }
-    }
+    // 0
+    @State var moveMode: Bool = false
+    // 1
+    @State var clickMode: Bool = false
+    
+    @State var isShowAddFailAlert: Bool = false
     
     var body: some View {
         
@@ -124,10 +119,11 @@ struct ContentView: View {
                 Divider()
                     .frame(width: 10)
                 VStack {
+
                     Text("X : \(self.mouseLocationX)")
                         .lineLimit(1)
                         .frame(width: 150, alignment: .leading)
-                        
+
                     Text("Y : \(self.mouseLocationY)")
                         .lineLimit(1)
                         .frame(width: 150, alignment: .leading)
@@ -142,27 +138,44 @@ struct ContentView: View {
                     VStack {
                         TextField("LocationX", value: $inputLocationX, format: .number)
                             .padding(.leading, 3)
+                            
                         TextField("LocationY", value: $inputLocationY, format: .number)
                             .padding(.leading, 3)
                     }
                     
                     Button {
+                        if !self.clickMode && !self.moveMode {
+                            self.isShowAddFailAlert = true
+                            return
+                        }
                         let inputData = InputLocationCoordinate(locationX: self.inputLocationX,
-                                                                locationY: self.inputLocationY)
+                                                                locationY: self.inputLocationY,
+                                                                mode: self.moveMode ? 0 : 1)
                         self.userTaskList.append(inputData)
                         print("받은 데이터 : \(self.userTaskList),", self.moveMode)
+                        
                     } label: {
                         Text("Add")
                     }
                     .padding()
+                    .alert(Text("Add Failed!"), isPresented: $isShowAddFailAlert) {
+                        Button("OK") {
+                            self.isShowAddFailAlert = false
+                        }
+                    }
                 }
                 
-                
-                
-                Toggle("MoveMode", isOn: $moveMode)
-                    .toggleStyle(.checkbox)
-                Toggle("ClickMode", isOn: $clickMode)
-                    .toggleStyle(.checkbox)
+                HStack {
+                    Toggle("Move Mode", isOn: $moveMode)
+                        .onChange(of: self.moveMode) { newValue in
+                            self.clickMode = !newValue
+                            
+                        }
+                    Toggle("Click Mode", isOn: $clickMode)
+                        .onChange(of: self.clickMode) { newValue in
+                            self.moveMode = !newValue
+                        }
+                }
             }
             
             Spacer()
@@ -180,17 +193,10 @@ struct ContentView: View {
     
     @ViewBuilder
     private func taskListView() -> some View {
-        List {
-            Text("Hi")
-            Text("Hi")
-            Text("Hi")
-            Text("Hi")
-            Text("Hi")
-            Text("Hi")
-            Text("Hi")
-            Text("Hi")
-            Text("Hi")
-            Text("Hi")
+        List(self.userTaskList, id: \.self) {
+            Text("X : \($0.locationX)")
+            Text("Y : \($0.locationY)")
+            Text($0.mode == 0 ? "Move Mode" : "Click Mode")
         }
         .frame(width: 200)
     }
