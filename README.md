@@ -1,7 +1,7 @@
 
 
 <div align="center">
-    <img src="https://github.com/wlxo0401/MAutoClick/blob/main/MAutoClick/MAutoClick/Assets.xcassets/AppIcon.appiconset/Frame%2041024.png" alt="logo" width="250" height="auto" />
+    <img src="https://github.com/wlxo0401/MAutoClick/blob/main/MAutoClick/MAutoClick/Assets.xcassets/AppIcon.appiconset/ico_1024.png" alt="logo" width="250" height="auto" />
     <h1>MAutoClick for macOS</h1>
     <p>A simple auto clicker for macOS</p>
 </div>
