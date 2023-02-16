@@ -12,7 +12,7 @@ import SwiftUI
 struct ContentView: View {
     // 작업 구조체
     struct InputUserAction: Hashable {
-        let index: Int
+        let uuid = UUID()
         let locationX: Double
         let locationY: Double
         let delay: Double
@@ -53,11 +53,14 @@ struct ContentView: View {
     @State var inputDelay: Double = 0.0
     // 입력된 Repeat
     @State var inputRepeat: Int = 0
+    // 수행 Repeat
+    @State var runRepeat: Int = 0
     
     // 작업 리스트
     @State var userTaskList: [InputUserAction] = []
     
-    @State var selectedIndex: Int?
+    // 선택된 item
+    @State var selectedItem: UUID?
     
     
     
@@ -67,6 +70,8 @@ struct ContentView: View {
     @State var clickMode: Bool = false
     // add 실패 Alert 변수
     @State var isShowAddFailAlert: Bool = false
+    // start 실패 Alert 변수
+    @State var isShowStartFailAlert: Bool = false
     
     var body: some View {
         
@@ -80,66 +85,6 @@ struct ContentView: View {
                 
                 
             }
-            
-            
-//            VStack {
-//
-//                Image(systemName: "clock").resizable().frame(width: 200, height: 200)
-//                            .onHover { over in
-//                                overImg = over
-//                            }
-//                            .onAppear(perform: {
-//                                NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved]) {
-//                                    if overImg {
-//                                        print("mouse: \(self.mouseLocation.x) \(self.mouseLocation.y)")
-//                                    }
-//                                    return $0
-//                                }
-//                            })
-//
-//                GeometryReader { geometry in
-//                    VStack {
-//                        Text("\(geometry.size.width) x \(geometry.size.height)")
-//                    }.frame(width: geometry.size.width, height: geometry.size.height)
-//                }
-//
-//                Text("Mouse \nLocationX : \(mouseLocation.x), \nLocationY : \(mouseLocation.y)")
-//
-//
-//                Button {
-//
-//                    if let screen = NSScreen.main {
-//                        let rect = screen.frame
-//                        let height = rect.size.height
-//                        let width = rect.size.width
-//
-//                        let source = CGEventSource.init(stateID: .hidSystemState)
-////                        let position = NSPoint(x: 1521.18, y: height - 1570.183)
-////                        let position = NSPoint(x: 1521.18, y: height - 1672.281)
-//                        let position = CGPoint(x: 848, y: height - 435)
-//
-//                        print(CGPoint(x: mouseLocation.x, y: height - mouseLocation.y))
-//                        let eventDown = CGEvent(mouseEventSource: source, mouseType: .leftMouseDown, mouseCursorPosition: position , mouseButton: .left)
-//
-//
-//                        let positionTwo = CGPoint(x: 800, y: height - 435)
-//                        let eventMove = CGEvent(mouseEventSource: source, mouseType: .leftMouseDragged, mouseCursorPosition: positionTwo , mouseButton: .left)
-//
-//                        let eventUp = CGEvent(mouseEventSource: source, mouseType: .leftMouseUp, mouseCursorPosition: positionTwo , mouseButton: .left)
-//
-//                        eventDown?.post(tap: .cghidEventTap)
-//                        usleep(500_000)
-//                        eventMove?.post(tap: .cghidEventTap)
-//                        usleep(500_000)
-//                        eventUp?.post(tap: .cghidEventTap)
-//                    }
-//
-//
-//                } label: {
-//                    Text("나를 눌러")
-//                }
-//
-//            }
         }
         .frame(width: 500, height: 350)
         
@@ -170,9 +115,20 @@ struct ContentView: View {
             
             HStack {
                 Button {
-                    print("Hi")
+                    if self.inputRepeat == 0 {
+                        self.isShowStartFailAlert = true
+                        return
+                    }
+                    self.runMAutoClick()
                 } label: {
                     Text("Start")
+                }
+                .alert(Text("Start Failed!"), isPresented: $isShowStartFailAlert) {
+                    Button("OK") {
+                        self.isShowStartFailAlert = false
+                    }
+                } message: {
+                    Text("Please enter the number of repeat!")
                 }
                 
                 Button {
@@ -181,7 +137,7 @@ struct ContentView: View {
                     Text("Stop")
                 }
                 
-                Text("0/\(self.inputRepeat)")
+                Text("\(self.runRepeat)/\(self.inputRepeat)")
                     .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
                     .padding(.trailing, 8)
             }
@@ -247,11 +203,10 @@ struct ContentView: View {
                     self.isShowAddFailAlert = true
                     return
                 }
-                let inputData = InputUserAction(index: (self.userTaskList.count + 1),
-                                                        locationX: self.inputLocationX,
-                                                        locationY: self.inputLocationY,
-                                                        delay: 0.0,
-                                                        mode: self.moveMode ? .move : .click)
+                let inputData = InputUserAction(locationX: self.inputLocationX,
+                                                locationY: self.inputLocationY,
+                                                delay: 0.0,
+                                                mode: self.moveMode ? .move : .click)
                 self.userTaskList.append(inputData)
             } label: {
                 Text("Add")
@@ -293,11 +248,10 @@ struct ContentView: View {
                 .textFieldStyle(.roundedBorder)
 
             Button {
-                let inputData = InputUserAction(index: (self.userTaskList.count + 1),
-                                                        locationX: 0,
-                                                        locationY: 0,
-                                                        delay: self.inputDelay,
-                                                        mode: .delay)
+                let inputData = InputUserAction(locationX: 0,
+                                                locationY: 0,
+                                                delay: self.inputDelay,
+                                                mode: .delay)
                 self.userTaskList.append(inputData)
             } label: {
                 Text("Add")
@@ -339,49 +293,67 @@ struct ContentView: View {
     private func taskListView() -> some View {
         
         VStack(spacing: 0) {
-            
-            
-            List(self.userTaskList, id: \.self) {
-                
-                
-                if $0.mode == .move || $0.mode == .click {
-                    self.listActionCellView(indexNumber: $0.index, locationX: $0.locationX, locationY: $0.locationY, mode: $0.mode == .move ? "Move" : "Click")
-                } else {
-                    self.listDelayCellView(indexNumber: $0.index, delay: $0.delay)
+            List {
+                ForEach(Array(self.userTaskList.enumerated()), id: \.offset) { index, element in
+                    if element.mode == .move || element.mode == .click {
+                        self.listActionCellView(indexNumber: index, uuid: element.uuid, locationX: element.locationX, locationY: element.locationY, mode: element.mode == .move ? "Move" : "Click")
+                    } else {
+                        self.listDelayCellView(indexNumber: index, uuid: element.uuid, delay: element.delay)
+                    }
                 }
-                
             }
             .frame(minHeight: 0, maxHeight: .infinity)
             
-//            HStack {
-//
-//                Button {
-//                    print("Hi")
-//                } label: {
-//                    Text("UP")
-//                }
-//
-//                Button {
-//                    print("Hi")
-//                } label: {
-//                    Text("Down")
-//                }
-//
-//                Button {
-//                    print("Hi")
-//
-////                    if let action = self.selectedItem {
-////                        self.userTaskList.remove
-////                    }
-////
-//                } label: {
-//
-//                    Text("Delete")
-//                }
-//            }
-//            .frame(height: 10)
-//            .frame(minWidth: 0, maxWidth: .infinity)
-//            .padding(.all)
+            
+            HStack {
+                Button {
+                    guard let uuid = self.selectedItem else { return }
+                    for (index, item) in self.userTaskList.enumerated() {
+                        if item.uuid == uuid {
+                            
+                            if index == 0 {
+                                return
+                            }
+                            self.userTaskList.swapAt(index - 1, index)
+                        }
+                    }
+                    
+                    
+                } label: {
+                    Text("UP")
+                }
+
+                Button {
+                    guard let uuid = self.selectedItem else { return }
+                    for (index, item) in self.userTaskList.enumerated() {
+                        if item.uuid == uuid {
+                            
+                            if index == self.userTaskList.count - 1 {
+                                return
+                            }
+                            self.userTaskList.swapAt(index, index + 1)
+                        }
+                    }
+                } label: {
+                    Text("Down")
+                }
+
+                Button {
+                    guard let uuid = self.selectedItem else { return }
+                    for (index, item) in self.userTaskList.enumerated() {
+                        if item.uuid == uuid {
+                            self.userTaskList.remove(at: index)
+                            self.selectedItem = nil
+                        }
+                    }
+                } label: {
+
+                    Text("Delete")
+                }
+            }
+            .frame(height: 10)
+            .frame(minWidth: 0, maxWidth: .infinity)
+            .padding(.all)
         }
         .frame(minHeight: 0, maxHeight: .infinity)
         .frame(width: 200)
@@ -389,7 +361,7 @@ struct ContentView: View {
     
     // 동작 Cell
     @ViewBuilder
-    private func listActionCellView(indexNumber: Int, locationX: Double, locationY: Double, mode: String) -> some View {
+    private func listActionCellView(indexNumber: Int, uuid: UUID, locationX: Double, locationY: Double, mode: String) -> some View {
         
         ZStack {
             HStack {
@@ -410,11 +382,11 @@ struct ContentView: View {
                 }
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .padding(.all, 4)
-                .background(self.selectedColor(currentIndex: indexNumber))
+                .background(self.selectedColor(currentUUID: uuid))
                 .cornerRadius(5)
             }
             .onTapGesture {
-                self.indexCheck(indexNumber: indexNumber)
+                self.indexCheck(currentUUID: uuid)
             }
         }
        
@@ -422,9 +394,9 @@ struct ContentView: View {
     }
     
     
-    private func selectedColor(currentIndex: Int) -> Color {
-        if let index = self.selectedIndex {
-            if index == currentIndex {
+    private func selectedColor(currentUUID: UUID) -> Color {
+        if let uuid = self.selectedItem {
+            if uuid == currentUUID {
                 return .blue
             } else {
                 return .gray
@@ -437,7 +409,7 @@ struct ContentView: View {
     
     // 지연 Cell
     @ViewBuilder
-    private func listDelayCellView(indexNumber: Int, delay: Double) -> some View {
+    private func listDelayCellView(indexNumber: Int, uuid: UUID, delay: Double) -> some View {
         
         HStack {
             Text("\(indexNumber)")
@@ -447,24 +419,57 @@ struct ContentView: View {
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
                 .fontWeight(.semibold)
                 .padding(.all, 4)
-                .background(self.selectedColor(currentIndex: indexNumber))
+                .background(self.selectedColor(currentUUID: uuid))
                 .cornerRadius(5)
         }
         .onTapGesture {
-            self.indexCheck(indexNumber: indexNumber)
+            self.indexCheck(currentUUID: uuid)
         }
     }
     
-    private func indexCheck(indexNumber: Int) {
-        if let index = self.selectedIndex {
-            if index == indexNumber {
-                self.selectedIndex = nil
+    private func indexCheck(currentUUID: UUID) {
+        if let uuid = self.selectedItem {
+            if uuid == currentUUID {
+                self.selectedItem = nil
             } else {
-                self.selectedIndex = indexNumber
+                self.selectedItem = currentUUID
             }
         } else {
-            self.selectedIndex = indexNumber
+            self.selectedItem = currentUUID
         }
+    }
+    
+    private func runMAutoClick() {
+        self.runRepeat = 0
+        
+        while true {
+            self.runRepeat += 1
+            
+            
+            
+            for action in self.userTaskList {
+                
+                
+                switch action.mode {
+                case .move:
+                    print("move")
+                case .click:
+                    print("click")
+                case .delay:
+                    print("delay")
+                }
+                
+            }
+            
+            print("count : \(self.runRepeat)")
+            
+            if self.runRepeat == self.inputRepeat {
+                break
+            }
+        }
+        
+        
+        
     }
     
 }
@@ -474,3 +479,66 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+
+
+
+
+//            VStack {
+//
+//                Image(systemName: "clock").resizable().frame(width: 200, height: 200)
+//                            .onHover { over in
+//                                overImg = over
+//                            }
+//                            .onAppear(perform: {
+//                                NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved]) {
+//                                    if overImg {
+//                                        print("mouse: \(self.mouseLocation.x) \(self.mouseLocation.y)")
+//                                    }
+//                                    return $0
+//                                }
+//                            })
+//
+//                GeometryReader { geometry in
+//                    VStack {
+//                        Text("\(geometry.size.width) x \(geometry.size.height)")
+//                    }.frame(width: geometry.size.width, height: geometry.size.height)
+//                }
+//
+//                Text("Mouse \nLocationX : \(mouseLocation.x), \nLocationY : \(mouseLocation.y)")
+//
+//
+//                Button {
+//
+//                    if let screen = NSScreen.main {
+//                        let rect = screen.frame
+//                        let height = rect.size.height
+//                        let width = rect.size.width
+//
+//                        let source = CGEventSource.init(stateID: .hidSystemState)
+////                        let position = NSPoint(x: 1521.18, y: height - 1570.183)
+////                        let position = NSPoint(x: 1521.18, y: height - 1672.281)
+//                        let position = CGPoint(x: 848, y: height - 435)
+//
+//                        print(CGPoint(x: mouseLocation.x, y: height - mouseLocation.y))
+//                        let eventDown = CGEvent(mouseEventSource: source, mouseType: .leftMouseDown, mouseCursorPosition: position , mouseButton: .left)
+//
+//
+//                        let positionTwo = CGPoint(x: 800, y: height - 435)
+//                        let eventMove = CGEvent(mouseEventSource: source, mouseType: .leftMouseDragged, mouseCursorPosition: positionTwo , mouseButton: .left)
+//
+//                        let eventUp = CGEvent(mouseEventSource: source, mouseType: .leftMouseUp, mouseCursorPosition: positionTwo , mouseButton: .left)
+//
+//                        eventDown?.post(tap: .cghidEventTap)
+//                        usleep(500_000)
+//                        eventMove?.post(tap: .cghidEventTap)
+//                        usleep(500_000)
+//                        eventUp?.post(tap: .cghidEventTap)
+//                    }
+//
+//
+//                } label: {
+//                    Text("나를 눌러")
+//                }
+//
+//            }
