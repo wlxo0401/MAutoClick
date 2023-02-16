@@ -464,9 +464,34 @@ struct ContentView: View {
                     }
                     print("move")
                 case .click:
+                    
+                    if let screen = NSScreen.main {
+                        let rect = screen.frame
+                        let height = rect.size.height
+                        
+                        let source = CGEventSource.init(stateID: .hidSystemState)
+                        let position = CGPoint(x: action.locationX, y: height - action.locationY)
+                        
+                        let eventDown = CGEvent(mouseEventSource: source, mouseType: .leftMouseDown, mouseCursorPosition: position , mouseButton: .left)
+                        let eventUp = CGEvent(mouseEventSource: source, mouseType: .leftMouseUp, mouseCursorPosition: position , mouseButton: .left)
+                        
+                        let eventDownn = CGEvent(mouseEventSource: source, mouseType: .leftMouseDown, mouseCursorPosition: position , mouseButton: .left)
+                        eventDown?.post(tap: .cghidEventTap)
+                        eventDownn?.post(tap: .cghidEventTap)
+//                        eventUp?.post(tap: .cghidEventTap)
+                    }
+                    
                     print("click")
                 case .delay:
                     print("delay")
+                    
+                    
+                    let second: Double = 1000000
+                    let startTime = CFAbsoluteTimeGetCurrent()
+                    usleep(useconds_t(action.delay * second))
+                    let endTime = CFAbsoluteTimeGetCurrent() - startTime
+                    
+                    print("endtime : ", endTime)
                 }
                 
             }
