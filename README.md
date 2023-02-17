@@ -35,11 +35,18 @@ Be sure to leave any bugs that occur during use in an issue.
 - Swift UI
 
 # Features
-- You can move the mouse cursor to the desired location.
+- Can move the mouse cursor location.
 - Click the mouse at the desired location.
 - Delay can be given for each action.
 - You can specify any number of repeats you want.
 
+# Shortcut
+- Command + Shift + C = Switch action state between move and click
+- Command + Shift + A = Adds a set action to the list
+- Command + Shift + D = Adds the set delay to the list
+- Command + Shift + S = Start/Stop Features
+- Command + Shift + L = Loop Mode on/off
+- Command + Shift + P = Auto Location on/off
 
 # Caution
 - Tested on 'Apple M1 Pro'.
@@ -47,3 +54,4 @@ Be sure to leave any bugs that occur during use in an issue.
 - I don't know how it works on Intel CPUs.
 - I don't know how it works on older versions of the OS.
 - The distributed dmg was built based on my MacBook.
+- When using Loop Mode, set Delay or remember the shortcut keys.
