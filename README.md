@@ -9,8 +9,11 @@
 <div align="center">
     <p>
         <a href="https://github.com/wlxo0401/MAutoClick/issues/">
-<img src="https://img.shields.io/github/issues/wlxo0401/MAutoClick" alt="open issues" />
-</a>
+            <img src="https://img.shields.io/github/issues/wlxo0401/MAutoClick" alt="open issues" />
+        </a>
+        <a href="https://github.com/wlxo0401/MAutoClick/stargazers"> 
+            <img src="https://img.shields.io/github/stars/wlxo0401/MAutoClick" alt="stars" /> 
+        </a>
     </p>
 </div>
 
