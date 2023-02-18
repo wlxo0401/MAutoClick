@@ -39,6 +39,9 @@ Be sure to leave any bugs that occur during use in an issue.
 - Click the mouse at the desired location.
 - Delay can be given for each action.
 - You can specify any number of repeats you want.
+- Support shortcut
+- You can enter the location automatically.
+- You can set the number of iterations to infinite.
 
 # Shortcut
 - Command + Shift + C = Switch action state between move and click
@@ -55,3 +58,15 @@ Be sure to leave any bugs that occur during use in an issue.
 - I don't know how it works on older versions of the OS.
 - The distributed dmg was built based on my MacBook.
 - When using Loop Mode, set Delay or remember the shortcut keys.
+
+# Usage
+1. Choose the action between move and click.
+2. Enter the location where you want to perform the action.
+3. Add any delay you want to apply to each action.
+4. Enter the number of iterations.
+5. Please press the start button.
+
+# Scope of Support
+|No|Device|OS|
+|---|---|---|
+|1|M1 Pro|ventura 13.1|

@@ -8,6 +8,7 @@
 import SwiftUI
 
 
+
 struct ContentView: View {
     // 작업 구조체
     struct InputUserAction: Hashable {
@@ -100,12 +101,6 @@ struct ContentView: View {
                 self.taskListView()
                     .frame(width: 200)
             }
-            .sheet(isPresented: $isHelpShow) {
-                self.helpView()
-            }
-            
-            
-    
             
         }
         .frame(width: 700, height: 350)
@@ -128,27 +123,6 @@ struct ContentView: View {
         
         
     }
-    
-    //MARK: - 가운데 앱 설정 부분
-    @ViewBuilder
-    private func helpView() -> some View {
-        
-        VStack {
-            
-            Text("Help")
-                .font(.system(size: 20, weight: .bold))
-                .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-                .padding(.top, 8)
-            
-            Button {
-                self.isHelpShow = false
-            } label: {
-                Text("Close")
-            }
-        }
-        .frame(width: 600, height: 325)
-    }
-    
     
     
     
@@ -293,6 +267,14 @@ extension ContentView {
                     Text("Help")
                 }
                 .disabled(self.isStarted)
+                .sheet(isPresented: $isHelpShow) {
+                    HelpView(isHelpShow: $isHelpShow)
+                }
+
+                
+                
+                
+                
             }
             .frame(height: 10)
             .frame(minWidth: 0, maxWidth: .infinity)

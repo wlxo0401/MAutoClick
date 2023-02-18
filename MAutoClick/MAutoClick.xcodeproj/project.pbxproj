@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		392AB93B29A0FDFA00387F98 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392AB93A29A0FDFA00387F98 /* HelpView.swift */; };
 		399765F5299C5B2F00C8511B /* MAutoClickApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399765F4299C5B2F00C8511B /* MAutoClickApp.swift */; };
 		399765F7299C5B2F00C8511B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399765F6299C5B2F00C8511B /* ContentView.swift */; };
 		399765F9299C5B3000C8511B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 399765F8299C5B3000C8511B /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		392AB93A29A0FDFA00387F98 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		399765F1299C5B2F00C8511B /* MAutoClick.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MAutoClick.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		399765F4299C5B2F00C8511B /* MAutoClickApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MAutoClickApp.swift; sourceTree = "<group>"; };
 		399765F6299C5B2F00C8511B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -54,6 +56,7 @@
 			children = (
 				399765F4299C5B2F00C8511B /* MAutoClickApp.swift */,
 				399765F6299C5B2F00C8511B /* ContentView.swift */,
+				392AB93A29A0FDFA00387F98 /* HelpView.swift */,
 				399765F8299C5B3000C8511B /* Assets.xcassets */,
 				399765FD299C5B3000C8511B /* MAutoClick.entitlements */,
 				399765FA299C5B3000C8511B /* Preview Content */,
@@ -144,6 +147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				399765F7299C5B2F00C8511B /* ContentView.swift in Sources */,
+				392AB93B29A0FDFA00387F98 /* HelpView.swift in Sources */,
 				399765F5299C5B2F00C8511B /* MAutoClickApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
