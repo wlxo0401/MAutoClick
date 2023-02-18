@@ -87,6 +87,9 @@ struct HelpView: View {
                         .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
                         .padding(.all)
                     Divider()
+                    
+                    
+                    
                     ScrollView {
                         self.explainButton(helpType: .usage)
                         self.explainButton(helpType: .shortcut)
@@ -95,6 +98,12 @@ struct HelpView: View {
                     }
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .padding(.all)
+                    
+                    
+                    
+                    
+                    
+                    
                 }
                 .frame(width: 200)
                 
@@ -112,8 +121,11 @@ struct HelpView: View {
         }
         .frame(width: 600, height: 325)
     }
-    
-    
+}
+
+//MARK: - Sub View
+extension HelpView {
+    // Help 목록
     @ViewBuilder
     private func explainButton(helpType: HelpType) -> some View {
         Button {
@@ -122,11 +134,8 @@ struct HelpView: View {
             Text(helpType.helpCategory)
         }
     }
-}
-
-//MARK: - Explain View
-extension HelpView {
-    // 기본 사용법
+    
+    // 설명
     @ViewBuilder
     private func explainView() -> some View {
         VStack {

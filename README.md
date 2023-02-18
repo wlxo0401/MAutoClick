@@ -35,6 +35,7 @@ Be sure to leave any bugs that occur during use in an issue.
 - Swift UI
 
 # Features
+- Manage actions as a list.
 - Can move the mouse cursor location.
 - Click the mouse at the desired location.
 - Delay can be given for each action.
