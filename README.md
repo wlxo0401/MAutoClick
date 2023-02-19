@@ -2,7 +2,7 @@
 
 <div align="center">
     <img src="https://github.com/wlxo0401/MAutoClick/blob/main/MAutoClick/MAutoClick/Assets.xcassets/AppIcon.appiconset/ico_1024.png" alt="logo" width="250" height="auto" />
-    <h1>MAutoClick for macOS</h1>
+    <h1>MAutoClick</h1>
     <p>A simple auto clicker for macOS</p>
 </div>
 
@@ -71,3 +71,16 @@ Be sure to leave any bugs that occur during use in an issue.
 |No|Device|OS|
 |---|---|---|
 |1|M1 Pro|ventura 13.1|
+
+# ScreenShot
+
+<div align="center">
+    <img src="https://github.com/wlxo0401/MAutoClick/blob/main/ScreenShot/001_main.png" alt="main" width="600" height="auto" />
+    <p>A main screen</p>
+    
+<img src="https://github.com/wlxo0401/MAutoClick/blob/main/ScreenShot/002_help.png" alt="main" width="600" height="auto" /> 
+<p>A help screen</p>
+</div>
+
+
+
