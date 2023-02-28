@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import CoreGraphics
 
 
 struct ContentView: View {
@@ -602,22 +602,25 @@ extension ContentView {
                             let rect = screen.frame
                             let height = rect.size.height
                             
-                            let source = CGEventSource.init(stateID: .hidSystemState)
-                            let position = CGPoint(x: action.locationX, y: height - action.locationY)
-                            let eventMove = CGEvent(mouseEventSource: source, mouseType: .leftMouseDragged, mouseCursorPosition: position, mouseButton: .left)
-                            eventMove?.post(tap: .cghidEventTap)
+                            let newCursorPosition = CGPoint(x: action.locationX, y: height - action.locationY)
+                            CGWarpMouseCursorPosition(newCursorPosition)
                         }
+                        
                     case .click:
                         if let screen = NSScreen.main {
                             let rect = screen.frame
                             let height = rect.size.height
                             
+                            
+                            // Git Hub
                             let source = CGEventSource.init(stateID: .hidSystemState)
                             let position = CGPoint(x: action.locationX, y: height - action.locationY)
-                            
+
+
                             let eventDown = CGEvent(mouseEventSource: source, mouseType: .leftMouseDown, mouseCursorPosition: position , mouseButton: .left)
                             let eventUp = CGEvent(mouseEventSource: source, mouseType: .leftMouseUp, mouseCursorPosition: position , mouseButton: .left)
-                            
+
+
                             eventDown?.post(tap: .cghidEventTap)
                             eventUp?.post(tap: .cghidEventTap)
                         }
