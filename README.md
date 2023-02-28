@@ -67,6 +67,17 @@ Be sure to leave any bugs that occur during use in an issue.
 4. Enter the number of iterations.
 5. Please press the start button.
 
+# Accessibility
+Accessibility permission is required for smooth use.
+
+<div align="center">
+    <img src="https://github.com/wlxo0401/MAutoClick/blob/main/ScreenShot/003_Accessibility_Permission.png" alt="main" width="600" height="auto" />
+    <p>Agree accessibility permissions</p>
+    
+<img src="https://github.com/wlxo0401/MAutoClick/blob/main/ScreenShot/004_Accessibility_Setting.png" alt="main" width="600" height="auto" /> 
+<p>Set accessibility permissions</p>
+</div>
+
 # Scope of Support
 |No|Device|OS|
 |---|---|---|
