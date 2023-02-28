@@ -50,9 +50,9 @@ struct ContentView: View {
     @State var inputLocationX: Double = 0.0
     @State var inputLocationY: Double = 0.0
     // 입력된 Delay
-    @State var inputDelay: Double = 0.0
+    @State var inputDelay: Double = 0.5
     // 입력된 Repeat
-    @State var inputRepeat: Int = 0
+    @State var inputRepeat: Int = 1
     // 수행 Repeat
     @State var runRepeat: Int = 0
     
@@ -70,7 +70,7 @@ struct ContentView: View {
     // 선택하는 동작
     @State var actionClick: Bool = false
     // Auto Location Input Mode
-    @State var isAutoLocationInput: Bool = false
+    @State private var isAutoLocationInput: Bool = false
     // loop Mode
     @State var isLoopMode: Bool = false
     // 멈춤 신호
@@ -163,8 +163,14 @@ extension ContentView {
         VStack {
             
             Spacer()
-            
             Toggle("Auto Location", isOn: $isAutoLocationInput)
+                .onChange(of: isAutoLocationInput) { value in
+                    if self.isAutoLocationInput {
+                        // 입력된 위치
+                        self.inputLocationX = self.mouseLocationX
+                        self.inputLocationY = self.mouseLocationY
+                    }
+                }
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 8)
                 .disabled(self.isStarted)
