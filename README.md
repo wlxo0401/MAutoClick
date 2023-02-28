@@ -25,7 +25,7 @@ This is a project started to study SwiftUI. Because it is a toy project, there a
 
 # Download
 <h3>
-<a href="https://github.com/wlxo0401/MAutoClick/releases/download/Ver1.0/MAutoClick_1.0.dmg">Download Latest Version</a>
+<a href="https://github.com/wlxo0401/MAutoClick/releases/download/Ver1.1/MAutoClick_1.1.dmg">Download Latest Version</a>
 </h3>
 
 Be sure to leave any bugs that occur during use in an issue.
