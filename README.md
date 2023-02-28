@@ -72,10 +72,10 @@ Accessibility permission is required for smooth use.
 
 <div align="center">
     <img src="https://github.com/wlxo0401/MAutoClick/blob/main/ScreenShot/003_Accessibility_Permission.png" alt="main" width="600" height="auto" />
-    <p>Agree accessibility permissions</p>
+    <p>Agree accessibility permissions : Click Open System Settings.</p>
     
-<img src="https://github.com/wlxo0401/MAutoClick/blob/main/ScreenShot/004_Accessibility_Setting.png" alt="main" width="600" height="auto" /> 
-<p>Set accessibility permissions</p>
+<img src="https://github.com/wlxo0401/MAutoClick/blob/main/ScreenShot/004_Accessibility_Setting.png" alt="main" width="600" height="auto" />
+<p>Set accessibility permissions : Allow access to MatoClick.</p>
 </div>
 
 # Scope of Support
