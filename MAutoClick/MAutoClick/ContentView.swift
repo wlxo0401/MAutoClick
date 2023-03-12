@@ -7,7 +7,7 @@
 
 import SwiftUI
 import CoreGraphics
-
+import HotKey
 
 struct ContentView: View {
     // 작업 구조체
@@ -85,10 +85,10 @@ struct ContentView: View {
     // start 실패 Alert 변수
     @State var isShowStartFailAlert: Bool = false
     
+    let startAndStopHotKey = HotKey(key: .s, modifiers: [.shift, .command])
     
     //MARK: - 메인 몸통
     var body: some View {
-        
         
         ZStack {
             HStack(spacing: 0) {
@@ -105,6 +105,51 @@ struct ContentView: View {
         }
         .frame(width: 700, height: 350)
         .onAppear(perform: {
+            
+            
+            self.startAndStopHotKey.keyDownHandler = {
+                if self.isStarted {
+                    // 진행 상태
+                    
+                    // 한번 거르기
+                    if !self.isStarted {
+                        return
+                    }
+                    
+                    // 진행 상태를 멈춤으로 변경
+                    self.isStarted = false
+                    // 멈춤 신호 발생
+                    self.stopSignal = true
+                } else {
+                    // 멈춤 상태
+                    
+                    // 한번 거르기
+                    if self.isStarted {
+                        return
+                    }
+                    
+                    // 반복 횟수가 0인 경우
+                    if self.inputRepeat == 0 {
+                        // 무한 모드 여부 확인
+                        if !self.isLoopMode {
+                            // 무한 모드가 아니면 시작 안함
+                            self.isShowStartFailAlert = true
+                            return
+                        }
+                    }
+                    
+                    // 작업 리스트 개수가 0인 경우
+                    if self.userTaskList.count == 0 {
+                        return
+                    }
+                    
+                    // 진행 상태를 시작으로 변경
+                    self.isStarted = true
+                    // 시작
+                    self.runMAutoClick()
+                }
+            }
+            
             self.actionMove = true
             
             NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved]) {
@@ -225,6 +270,7 @@ extension ContentView {
             
             
             HStack {
+                // 시작 버튼
                 Button {
                     
                     if self.isStarted {
@@ -251,8 +297,8 @@ extension ContentView {
                     Text("Please enter the number of repeat!")
                 }
                 .disabled(self.isStarted)
-                .keyboardShortcut("s", modifiers: [.command, .shift])
                 
+                // 종료 버튼
                 Button {
                     
                     if !self.isStarted {
@@ -265,7 +311,6 @@ extension ContentView {
                     Text("Stop")
                 }
                 .disabled(!self.isStarted)
-                .keyboardShortcut("s", modifiers: [.command, .shift])
                 
                 Button {
                     self.isHelpShow = true
