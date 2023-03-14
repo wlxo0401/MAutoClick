@@ -82,8 +82,10 @@ struct ContentView: View {
     
     // add 실패 Alert 변수
     @State var isShowAddFailAlert: Bool = false
-    // start 실패 Alert 변수
-    @State var isShowStartFailAlert: Bool = false
+    // start repeat 실패 Alert 변수
+    @State var isRepeatCountFailAlert: Bool = false
+    // start Task list 실패 Alert 변수
+    @State var isTaskCountFailAlert: Bool = false
     
     let startAndStopHotKey = HotKey(key: .s, modifiers: [.shift, .command])
     
@@ -105,8 +107,6 @@ struct ContentView: View {
         }
         .frame(width: 700, height: 350)
         .onAppear(perform: {
-            
-            
             self.startAndStopHotKey.keyDownHandler = {
                 if self.isStarted {
                     // 진행 상태
@@ -133,7 +133,7 @@ struct ContentView: View {
                         // 무한 모드 여부 확인
                         if !self.isLoopMode {
                             // 무한 모드가 아니면 시작 안함
-                            self.isShowStartFailAlert = true
+                            self.isRepeatCountFailAlert = true
                             return
                         }
                     }
@@ -279,22 +279,31 @@ extension ContentView {
                     
                     if self.inputRepeat == 0 {
                         if !self.isLoopMode {
-                            self.isShowStartFailAlert = true
+                            self.isRepeatCountFailAlert = true
                             return
                         }
                     }
+                    
+                    
                     
                     self.isStarted = true
                     self.runMAutoClick()
                 } label: {
                     Text("Start")
                 }
-                .alert(Text("Start Failed!"), isPresented: $isShowStartFailAlert) {
+                .alert(Text("Start Failed!"), isPresented: $isRepeatCountFailAlert) {
                     Button("OK") {
-                        self.isShowStartFailAlert = false
+                        self.isRepeatCountFailAlert = false
                     }
                 } message: {
                     Text("Please enter the number of repeat!")
+                }
+                .alert(Text("Start Failed!"), isPresented: $isTaskCountFailAlert) {
+                    Button("OK") {
+                        self.isTaskCountFailAlert = false
+                    }
+                } message: {
+                    Text("Please add Action!")
                 }
                 .disabled(self.isStarted)
                 
