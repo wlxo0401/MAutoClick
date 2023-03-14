@@ -618,10 +618,10 @@ extension ContentView {
                 Divider()
                 
                 VStack(spacing: 0) {
-                    Text("X : \(locationX)")
+                    Text("X : \(locationX.removeZerosFromEnd())")
                         .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
                         .fontWeight(.semibold)
-                    Text("Y : \(locationY)")
+                    Text("Y : \(locationY.removeZerosFromEnd())")
                         .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
                         .fontWeight(.semibold)
                     Text("Mode : \(mode)")
@@ -664,10 +664,11 @@ extension ContentView {
         
         HStack {
             Text("\(indexNumber)")
+                .frame(minWidth: 0, maxWidth: .infinity)
             
             Divider()
-            Text("Delay : \(delay)")
-                .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+            Text("Delay : \(delay.removeZerosFromEnd())")
+                .frame(width: 120)
                 .fontWeight(.semibold)
                 .padding(.all, 4)
                 .background(self.selectedColor(currentUUID: uuid))
@@ -805,3 +806,13 @@ struct ContentView_Previews: PreviewProvider {
  
  
  */
+
+extension Double {
+    func removeZerosFromEnd() -> String {
+        let formatter = NumberFormatter()
+        let number = NSNumber(value: self)
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 16 //maximum digits in Double after dot (maximum precision)
+        return String(formatter.string(from: number) ?? "")
+    }
+}
