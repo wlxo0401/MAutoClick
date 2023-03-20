@@ -98,19 +98,36 @@ struct ContentView: View {
     var body: some View {
         
         ZStack {
-            HStack(spacing: 0) {
-                self.baseFunctionView()
-                    .frame(width: 300)
+            VStack(spacing: 0) {
+                self.mouseLocationView()
+                    .frame(minWidth: 0, maxWidth: .infinity)
+                    .frame(height: 60)
+                    .padding(.bottom, 0)
+                
                 Divider()
-                self.appSettingView()
-                    .frame(width: 200)
+                
+                HStack(spacing: 0) {
+                    self.leftSideView()
+                    
+                    Divider()
+                        .padding(.top, 0)
+                        .padding(.bottom, 0)
+                        .frame(minHeight: 0, maxHeight: .infinity)
+                    
+                    self.rightSideView()
+                        .frame(width: 190)
+                }
+                .frame(height: 230)
+                
                 Divider()
+                
                 self.taskListView()
-                    .frame(width: 200)
+                    .frame(minWidth: 0, maxWidth: .infinity)
+                    .frame(minHeight: 0, maxHeight: .infinity)
             }
             
         }
-        .frame(width: 700, height: 350)
+        .frame(width: 700, height: 420)
         .onAppear(perform: {
             self.startAndStopHotKey.keyDownHandler = {
                 if self.isStarted {
@@ -184,13 +201,9 @@ extension ContentView {
     
     //MARK: - 왼쪽 기본 기능 부분
     @ViewBuilder
-    private func baseFunctionView() -> some View {
+    private func leftSideView() -> some View {
        
         VStack(spacing: 0) {
-            
-            self.mouseLocationView()
-                
-            Divider()
             
             self.actionView()
             
@@ -198,19 +211,13 @@ extension ContentView {
                 .padding(.top, 8)
             
             self.delayView()
-            
-            Divider()
-                .padding(.top, 8)
-            
-            self.repeatView()
-            
-            Spacer()
         }
+        .frame(minHeight: 0, maxHeight: .infinity)
     }
     
     //MARK: - 가운데 앱 설정 부분
     @ViewBuilder
-    private func appSettingView() -> some View {
+    private func rightSideView() -> some View {
         VStack {
             
             Spacer()
@@ -235,6 +242,8 @@ extension ContentView {
             
             Spacer()
             
+            
+            self.repeatView()
             
             HStack {
                 Text("State")
@@ -340,16 +349,10 @@ extension ContentView {
                 .sheet(isPresented: $isHelpShow) {
                     HelpView(isHelpShow: $isHelpShow)
                 }
-
-                
-                
-                
-                
             }
             .frame(height: 10)
             .frame(minWidth: 0, maxWidth: .infinity)
             .padding(.all)
-            
         }
         
         
@@ -382,102 +385,112 @@ extension ContentView {
     // Action View
     @ViewBuilder
     private func actionView() -> some View {
-        Text("Action")
-            .font(.system(size: 14, weight: .bold))
-            .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-            .padding(.top, 8)
-        
-        
-        HStack {
-            VStack {
-                HStack(spacing: 3) {
-                    Text("LocationX")
-                    TextField("LocationX", value: $inputLocationX, format: .number)
-                        .padding(.leading, 24)
-                        .textFieldStyle(.roundedBorder)
-                        .disabled(self.isAutoLocationInput)
-                        .disabled(self.isStarted)
-                }
-                .padding(.leading, 10)
-                
-                HStack(spacing: 3) {
-                    Text("LocationY")
-                    TextField("LocationY", value: $inputLocationY, format: .number)
-                        .padding(.leading, 25)
-                        .textFieldStyle(.roundedBorder)
-                        .disabled(self.isAutoLocationInput)
-                        .disabled(self.isStarted)
-                }
-                .padding(.leading, 10)
-                
-                HStack(spacing: 3) {
-                    Text("Each Repeat")
-                    TextField("LocationY", value: $inputEachRepeat, format: .number)
-                        .padding(.leading, 9)
-                        .textFieldStyle(.roundedBorder)
-                        .disabled(self.isStarted)
-                }
-                .padding(.leading, 10)
-            }
-
-            Button {
-                
-                if !self.actionClick && !self.actionMove {
-                    self.isShowAddFailAlert = true
-                    return
-                }
-                
-                if self.inputEachRepeat == 0 {
-                    self.isEachRepeatCountFailAlert = true
-                    return
-                }
-                
-                let inputData = InputUserAction(locationX: self.inputLocationX,
-                                                locationY: self.inputLocationY,
-                                                delay: 0.0,
-                                                eachRepeat: self.inputEachRepeat,
-                                                action: self.actionMove ? .move : .click)
-                self.userTaskList.append(inputData)
-            } label: {
-                Text("Add")
-            }
-            .padding()
-            .alert(Text("Add Failed!"), isPresented: $isShowAddFailAlert) {
-                Button("OK") {
-                    self.isShowAddFailAlert = false
-                }
-            } message: {
-                Text("Please choose action!")
-            }
-            .alert(Text("Add Failed!"), isPresented: $isEachRepeatCountFailAlert) {
-                Button("OK") {
-                    self.isEachRepeatCountFailAlert = false
-                }
-            } message: {
-                Text("Please enter each repeat count!")
-            }
-            .disabled(self.isStarted)
-            .keyboardShortcut("a", modifiers: [.command, .shift])
-        }
-        .padding(.top, 5)
-        
-        HStack {
-            Toggle("Move", isOn: $actionMove)
-                .onChange(of: self.actionMove) { newValue in
-                    self.actionClick = !newValue
-                }
-                .keyboardShortcut("c", modifiers: [.command, .shift])
-                .disabled(self.isStarted)
-            Toggle("Click", isOn: $actionClick)
-                .onChange(of: self.actionClick) { newValue in
-                    self.actionMove = !newValue
-                }
+            Text("Action")
+                .font(.system(size: 14, weight: .bold))
+                .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+                .padding(.top, 8)
             
             
-        }
-        .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-        .padding(.top, 3)
-        .padding(.leading, 8)
+            HStack {
+                VStack {
+                    HStack(spacing: 3) {
+                        Text("LocationX")
+                        TextField("LocationX", value: $inputLocationX, format: .number)
+                            .padding(.leading, 30)
+                            .textFieldStyle(.roundedBorder)
+                            .disabled(self.isAutoLocationInput)
+                            .disabled(self.isStarted)
+                    }
+                    .padding(.leading, 10)
+                    
+                    HStack(spacing: 3) {
+                        Text("LocationY")
+                        TextField("LocationY", value: $inputLocationY, format: .number)
+                            .padding(.leading, 31)
+                            .textFieldStyle(.roundedBorder)
+                            .disabled(self.isAutoLocationInput)
+                            .disabled(self.isStarted)
+                    }
+                    .padding(.leading, 10)
+                    
+                    HStack(spacing: 3) {
+                        Text("Action Repeat")
+                        TextField("LocationY", value: $inputEachRepeat, format: .number)
+                            .padding(.leading, 6)
+                            .textFieldStyle(.roundedBorder)
+                            .disabled(self.isStarted)
+                    }
+                    .padding(.leading, 10)
+                    
+                    HStack(spacing: 3) {
+                        Text("Action Delay")
+                        TextField("LocationY", value: $inputEachRepeat, format: .number)
+                            .padding(.leading, 15)
+                            .textFieldStyle(.roundedBorder)
+                            .disabled(self.isStarted)
+                    }
+                    .padding(.leading, 10)
+                }
+                
+                VStack {
+                    Toggle("Move", isOn: $actionMove)
+                        .onChange(of: self.actionMove) { newValue in
+                            self.actionClick = !newValue
+                        }
+                        .keyboardShortcut("c", modifiers: [.command, .shift])
+                        .disabled(self.isStarted)
+                    
+                    Toggle("Click", isOn: $actionClick)
+                        .onChange(of: self.actionClick) { newValue in
+                            self.actionMove = !newValue
+                        }
+                    
+                    
+                    
+                    Button {
+                        
+                        if !self.actionClick && !self.actionMove {
+                            self.isShowAddFailAlert = true
+                            return
+                        }
+                        
+                        if self.inputEachRepeat == 0 {
+                            self.isEachRepeatCountFailAlert = true
+                            return
+                        }
+                        
+                        let inputData = InputUserAction(locationX: self.inputLocationX,
+                                                        locationY: self.inputLocationY,
+                                                        delay: 0.0,
+                                                        eachRepeat: self.inputEachRepeat,
+                                                        action: self.actionMove ? .move : .click)
+                        self.userTaskList.append(inputData)
+                    } label: {
+                        Text("Add")
+                    }
+                    .padding()
+                    .alert(Text("Add Failed!"), isPresented: $isShowAddFailAlert) {
+                        Button("OK") {
+                            self.isShowAddFailAlert = false
+                        }
+                    } message: {
+                        Text("Please choose action!")
+                    }
+                    .alert(Text("Add Failed!"), isPresented: $isEachRepeatCountFailAlert) {
+                        Button("OK") {
+                            self.isEachRepeatCountFailAlert = false
+                        }
+                    } message: {
+                        Text("Please enter each repeat count!")
+                    }
+                    .disabled(self.isStarted)
+                    .keyboardShortcut("a", modifiers: [.command, .shift])
+                    .frame(height: 30)
+                    
+                }
+            }
+            .padding(.top, 5)
+        
     }
     
     // 지연 View
@@ -543,19 +556,42 @@ extension ContentView {
     //MARK: - 오른쪽 리스트
     @ViewBuilder
     private func taskListView() -> some View {
-        VStack(spacing: 0) {
-            List {
-                ForEach(Array(self.userTaskList.enumerated()), id: \.offset) { index, element in
-                    if element.action == .move || element.action == .click {
-                        self.listActionCellView(indexNumber: index + 1, uuid: element.uuid, locationX: element.locationX, locationY: element.locationY, mode: element.action == .move ? "Move" : "Click", eachRepeat: element.eachRepeat)
-                    } else {
-                        self.listDelayCellView(indexNumber: index + 1, uuid: element.uuid, delay: element.delay)
+        HStack(spacing: 0) {
+            VStack(spacing: 0) {
+                HStack(spacing: 0) {
+                    
+                    // 600
+                    Text("No")
+                        .frame(width: 80)
+                    Text("X")
+                        .frame(width: 115)
+                    Text("Y")
+                        .frame(width: 115)
+                    Text("Action")
+                        .frame(width: 70)
+                    Text("Each Repeat")
+                        .frame(width: 110)
+                    Text("Each Delay")
+                        .frame(width: 110)
+                }
+                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                .frame(height: 20)
+                
+                
+                List {
+                    ForEach(Array(self.userTaskList.enumerated()), id: \.offset) { index, element in
+                        if element.action == .move || element.action == .click {
+                            self.listActionCellView(indexNumber: index + 1, uuid: element.uuid, locationX: element.locationX, locationY: element.locationY, mode: element.action == .move ? "Move" : "Click", eachRepeat: element.eachRepeat)
+                        } else {
+                            self.listDelayCellView(indexNumber: index + 1, uuid: element.uuid, delay: element.delay)
+                        }
                     }
                 }
+                .frame(minWidth: 0, maxWidth: .infinity)
             }
-            .frame(minHeight: 0, maxHeight: .infinity)
             
-            HStack {
+            
+            VStack {
                 Button {
                     guard let uuid = self.selectedItem else { return }
                     for (index, item) in self.userTaskList.enumerated() {
@@ -598,9 +634,8 @@ extension ContentView {
                     Text("Delete")
                 }
             }
-            .frame(height: 10)
-            .frame(minWidth: 0, maxWidth: .infinity)
-            .padding(.all)
+            .frame(minHeight: 0, maxHeight: .infinity)
+            .frame(width: 100)
         }
         .frame(minHeight: 0, maxHeight: .infinity)
         .disabled(self.isStarted)
@@ -610,38 +645,32 @@ extension ContentView {
     @ViewBuilder
     private func listActionCellView(indexNumber: Int, uuid: UUID, locationX: Double, locationY: Double, mode: String, eachRepeat: Int) -> some View {
         
-        ZStack {
-            HStack {
-                Text("\(indexNumber)")
-                    .frame(minWidth: 0, maxWidth: .infinity)
-                
-                Divider()
-                
-                VStack(spacing: 0) {
-                    Text("X : \(locationX.removeZerosFromEnd())")
-                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-                        .fontWeight(.semibold)
-                    Text("Y : \(locationY.removeZerosFromEnd())")
-                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-                        .fontWeight(.semibold)
-                    Text("Mode : \(mode)")
-                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-                        .fontWeight(.semibold)
-                    Text("Each Repeat : \(eachRepeat)")
-                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-                        .fontWeight(.semibold)
-                }
-                .frame(width: 120)
-                .padding(.all, 4)
-                .background(self.selectedColor(currentUUID: uuid))
-                .cornerRadius(5)
-            }
-            .onTapGesture {
-                self.indexCheck(currentUUID: uuid)
-            }
+        HStack(spacing: 0) {
+            Text("\(indexNumber)")
+                .frame(width: 80)
+                .fontWeight(.semibold)
+            Text(String(format: "%.03f", locationX))
+                .frame(width: 115)
+                .fontWeight(.semibold)
+            Text(String(format: "%.03f", locationY))
+                .frame(width: 115)
+                .fontWeight(.semibold)
+            Text(mode)
+                .frame(width: 70)
+                .fontWeight(.semibold)
+            Text("\(eachRepeat)")
+                .frame(width: 110)
+                .fontWeight(.semibold)
+            Text("1")
+                .frame(width: 110)
+                .fontWeight(.semibold)
         }
-       
-        
+        .frame(minWidth: 0, maxWidth: .infinity)
+        .frame(minHeight: 0, maxHeight: .infinity)
+        .background(self.selectedColor(currentUUID: uuid))
+        .onTapGesture {
+            self.indexCheck(currentUUID: uuid)
+        }
     }
     
     
@@ -650,10 +679,10 @@ extension ContentView {
             if uuid == currentUUID {
                 return .blue
             } else {
-                return .gray
+                return .clear
             }
         } else {
-            return .gray
+            return .clear
         }
     }
     
@@ -662,18 +691,31 @@ extension ContentView {
     @ViewBuilder
     private func listDelayCellView(indexNumber: Int, uuid: UUID, delay: Double) -> some View {
         
-        HStack {
+        HStack(spacing: 0) {
             Text("\(indexNumber)")
-                .frame(minWidth: 0, maxWidth: .infinity)
-            
-            Divider()
-            Text("Delay : \(delay.removeZerosFromEnd())")
-                .frame(width: 120)
+                .frame(width: 80)
                 .fontWeight(.semibold)
-                .padding(.all, 4)
-                .background(self.selectedColor(currentUUID: uuid))
-                .cornerRadius(5)
+            
+            Text("0")
+                .frame(width: 115)
+                .fontWeight(.semibold)
+            Text("0")
+                .frame(width: 115)
+                .fontWeight(.semibold)
+            Text("Delay")
+                .frame(width: 70)
+                .fontWeight(.semibold)
+            Text("1")
+                .frame(width: 110)
+                .fontWeight(.semibold)
+            Text("\(delay.removeZerosFromEnd())")
+                .frame(width: 110)
+                .fontWeight(.semibold)
+            
         }
+        .frame(minWidth: 0, maxWidth: .infinity)
+        .frame(minHeight: 0, maxHeight: .infinity)
+        .background(self.selectedColor(currentUUID: uuid))
         .onTapGesture {
             self.indexCheck(currentUUID: uuid)
         }
