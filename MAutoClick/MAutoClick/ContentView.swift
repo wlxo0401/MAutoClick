@@ -15,8 +15,8 @@ struct ContentView: View {
         let uuid = UUID()
         let locationX: Double
         let locationY: Double
+        let actionRepeat: Int
         let delay: Double
-        let eachRepeat: Int
         let action: ActionType
     }
 
@@ -50,12 +50,17 @@ struct ContentView: View {
     // 입력된 위치
     @State var inputLocationX: Double = 0.0
     @State var inputLocationY: Double = 0.0
+    // 각각 Action Repeat
+    @State var inputActionRepeat: Int = 1
+    // 각각 Action Delay
+    @State var inputActionDelay: Double = 0.0
+    
     // 입력된 Delay
     @State var inputDelay: Double = 0.5
+    
     // 입력된 Repeat
     @State var inputRepeat: Int = 1
-    // 각각 Action Repeat
-    @State var inputEachRepeat: Int = 1
+    
     // 수행 Repeat
     @State var runRepeat: Int = 0
     
@@ -130,6 +135,11 @@ struct ContentView: View {
         .frame(width: 700, height: 420)
         .onAppear(perform: {
             self.startAndStopHotKey.keyDownHandler = {
+                
+                DispatchQueue.main.async {
+                    self.selectedItem = nil
+                }
+                
                 if self.isStarted {
                     // 진행 상태
                     
@@ -415,7 +425,7 @@ extension ContentView {
                     
                     HStack(spacing: 3) {
                         Text("Action Repeat")
-                        TextField("LocationY", value: $inputEachRepeat, format: .number)
+                        TextField("Action Repeat", value: $inputActionRepeat, format: .number)
                             .padding(.leading, 6)
                             .textFieldStyle(.roundedBorder)
                             .disabled(self.isStarted)
@@ -424,7 +434,7 @@ extension ContentView {
                     
                     HStack(spacing: 3) {
                         Text("Action Delay")
-                        TextField("LocationY", value: $inputEachRepeat, format: .number)
+                        TextField("Action Delay", value: $inputActionDelay, format: .number)
                             .padding(.leading, 15)
                             .textFieldStyle(.roundedBorder)
                             .disabled(self.isStarted)
@@ -448,23 +458,30 @@ extension ContentView {
                     
                     
                     Button {
-                        
+                        DispatchQueue.main.async {
+                            NSApp.keyWindow?.makeFirstResponder(nil)
+                        }
                         if !self.actionClick && !self.actionMove {
                             self.isShowAddFailAlert = true
                             return
                         }
                         
-                        if self.inputEachRepeat == 0 {
+                        if self.inputActionRepeat == 0 {
                             self.isEachRepeatCountFailAlert = true
                             return
                         }
                         
                         let inputData = InputUserAction(locationX: self.inputLocationX,
                                                         locationY: self.inputLocationY,
-                                                        delay: 0.0,
-                                                        eachRepeat: self.inputEachRepeat,
+                                                        actionRepeat: self.inputActionRepeat,
+                                                        delay: self.inputActionDelay,
                                                         action: self.actionMove ? .move : .click)
                         self.userTaskList.append(inputData)
+                        DispatchQueue.main.async {
+                            self.inputActionRepeat = 1
+                            self.inputActionDelay = 0
+                        }
+                        
                     } label: {
                         Text("Add")
                     }
@@ -478,6 +495,10 @@ extension ContentView {
                     }
                     .alert(Text("Add Failed!"), isPresented: $isEachRepeatCountFailAlert) {
                         Button("OK") {
+                            DispatchQueue.main.async {
+                                NSApp.keyWindow?.makeFirstResponder(nil)
+                                self.inputActionRepeat = 1
+                            }
                             self.isEachRepeatCountFailAlert = false
                         }
                     } message: {
@@ -510,8 +531,8 @@ extension ContentView {
             Button {
                 let inputData = InputUserAction(locationX: 0,
                                                 locationY: 0,
+                                                actionRepeat: 1,
                                                 delay: self.inputDelay,
-                                                eachRepeat: 1,
                                                 action: .delay)
                 self.userTaskList.append(inputData)
             } label: {
@@ -569,19 +590,25 @@ extension ContentView {
                         .frame(width: 115)
                     Text("Action")
                         .frame(width: 70)
-                    Text("Each Repeat")
+                    Text("Action Repeat")
                         .frame(width: 110)
-                    Text("Each Delay")
+                    Text("Action Delay")
                         .frame(width: 110)
                 }
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                .frame(height: 20)
+                .frame(height: 25)
                 
                 
                 List {
                     ForEach(Array(self.userTaskList.enumerated()), id: \.offset) { index, element in
                         if element.action == .move || element.action == .click {
-                            self.listActionCellView(indexNumber: index + 1, uuid: element.uuid, locationX: element.locationX, locationY: element.locationY, mode: element.action == .move ? "Move" : "Click", eachRepeat: element.eachRepeat)
+                            self.listActionCellView(indexNumber: index + 1,
+                                                    uuid: element.uuid,
+                                                    locationX: element.locationX,
+                                                    locationY: element.locationY,
+                                                    actionRepeat: element.actionRepeat,
+                                                    actionDelay: element.delay,
+                                                    mode: element.action == .move ? "Move" : "Click")
                         } else {
                             self.listDelayCellView(indexNumber: index + 1, uuid: element.uuid, delay: element.delay)
                         }
@@ -643,7 +670,7 @@ extension ContentView {
     
     // 동작 Cell
     @ViewBuilder
-    private func listActionCellView(indexNumber: Int, uuid: UUID, locationX: Double, locationY: Double, mode: String, eachRepeat: Int) -> some View {
+    private func listActionCellView(indexNumber: Int, uuid: UUID, locationX: Double, locationY: Double, actionRepeat: Int, actionDelay: Double, mode: String) -> some View {
         
         HStack(spacing: 0) {
             Text("\(indexNumber)")
@@ -658,10 +685,10 @@ extension ContentView {
             Text(mode)
                 .frame(width: 70)
                 .fontWeight(.semibold)
-            Text("\(eachRepeat)")
+            Text("\(actionRepeat)")
                 .frame(width: 110)
                 .fontWeight(.semibold)
-            Text("1")
+            Text("\(actionDelay.removeZerosFromEnd())")
                 .frame(width: 110)
                 .fontWeight(.semibold)
         }
@@ -743,52 +770,22 @@ extension ContentView {
                 
                 for action in self.userTaskList {
                     
+                    DispatchQueue.main.async {
+                        self.indexCheck(currentUUID: action.uuid)
+                    }
+                    
                     
                     var count = 0
                     
                     // 각 동작별 반복
-                    while count < action.eachRepeat {
-                        
-                        
+                    while count < action.actionRepeat {
                         
                         // 멈춤 신호
                         if self.stopSignal {
                             break
                         }
                         
-                        switch action.action {
-                        case .move:
-                            if let screen = NSScreen.main {
-                                let rect = screen.frame
-                                let height = rect.size.height
-                                
-                                let newCursorPosition = CGPoint(x: action.locationX, y: height - action.locationY)
-                                CGWarpMouseCursorPosition(newCursorPosition)
-                            }
-                            
-                        case .click:
-                            if let screen = NSScreen.main {
-                                let rect = screen.frame
-                                let height = rect.size.height
-                                
-                                
-                                // Git Hub
-                                let source = CGEventSource.init(stateID: .hidSystemState)
-                                let position = CGPoint(x: action.locationX, y: height - action.locationY)
-
-
-                                let eventDown = CGEvent(mouseEventSource: source, mouseType: .leftMouseDown, mouseCursorPosition: position , mouseButton: .left)
-                                let eventUp = CGEvent(mouseEventSource: source, mouseType: .leftMouseUp, mouseCursorPosition: position , mouseButton: .left)
-
-
-                                eventDown?.post(tap: .cghidEventTap)
-                                eventUp?.post(tap: .cghidEventTap)
-                            }
-                        case .delay:
-                            let second: Double = 1000000
-                            usleep(useconds_t(action.delay * second))
-                        }
-                        
+                        self.switchAction(action: action)
                         
                         
                         count += 1
@@ -820,6 +817,47 @@ extension ContentView {
         }
         
         
+    }
+    
+    
+    private func switchAction(action: InputUserAction) {
+        switch action.action {
+        case .move:
+            if let screen = NSScreen.main {
+                let rect = screen.frame
+                let height = rect.size.height
+                
+                let newCursorPosition = CGPoint(x: action.locationX, y: height - action.locationY)
+                CGWarpMouseCursorPosition(newCursorPosition)
+                
+                let second: Double = 1000000
+                usleep(useconds_t(action.delay * second))
+            }
+        case .click:
+            if let screen = NSScreen.main {
+                let rect = screen.frame
+                let height = rect.size.height
+                
+                
+                // Git Hub
+                let source = CGEventSource.init(stateID: .hidSystemState)
+                let position = CGPoint(x: action.locationX, y: height - action.locationY)
+
+
+                let eventDown = CGEvent(mouseEventSource: source, mouseType: .leftMouseDown, mouseCursorPosition: position , mouseButton: .left)
+                let eventUp = CGEvent(mouseEventSource: source, mouseType: .leftMouseUp, mouseCursorPosition: position , mouseButton: .left)
+
+
+                eventDown?.post(tap: .cghidEventTap)
+                eventUp?.post(tap: .cghidEventTap)
+                
+                let second: Double = 1000000
+                usleep(useconds_t(action.delay * second))
+            }
+        case .delay:
+            let second: Double = 1000000
+            usleep(useconds_t(action.delay * second))
+        }
     }
 }
 
