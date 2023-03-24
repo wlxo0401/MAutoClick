@@ -628,13 +628,7 @@ extension ContentView {
             
             VStack {
                 Button {
-                    do {
-                        let list = try JSONEncoder().encode(self.userTaskList)
-                        let user = UserDefaults.standard
-                        user.set(list, forKey: "userTaskList")
-                    } catch {
-                        
-                    }
+                    self.SaveUserTaskList()
                 } label: {
                     Text("Save")
                 }
@@ -877,6 +871,16 @@ extension ContentView {
         case .delay:
             let second: Double = 1000000
             usleep(useconds_t(action.delay * second))
+        }
+    }
+    
+    private func SaveUserTaskList() {
+        do {
+            let list = try JSONEncoder().encode(self.userTaskList)
+            let user = UserDefaults.standard
+            user.set(list, forKey: "userTaskList")
+        } catch {
+            
         }
     }
 }
