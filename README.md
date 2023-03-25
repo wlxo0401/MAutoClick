@@ -105,8 +105,6 @@ Accessibility permission is required for smooth use.
 </div>
 
 # Developer
-
-<a href="https://github.com/wlxo0401/MAutoClick/releases/download/Ver1.1/MAutoClick_1.1.dmg">Download Latest Version</a>
-Kelvin
-https://github.com/kelvinlee
+- wlxo0401(KimJitae)
+- kelvinlee(Kelvin · he/him)
 
