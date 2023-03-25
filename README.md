@@ -23,30 +23,34 @@
 # About
 This is a project started to study SwiftUI. Because it is a toy project, there are many bugs that could not be found. Please let me know if you find any bugs.
 
-# Download
+# Download 1.1
 <h3>
 <a href="https://github.com/wlxo0401/MAutoClick/releases/download/Ver1.1/MAutoClick_1.1.dmg">Download Latest Version</a>
 </h3>
 
 Be sure to leave any bugs that occur during use in an issue.
 
-# Update 1.2
+# Update 1.2(Beta)
 - The 'Start/Stop' shortcut works globally.
 - Each action can be repeated and delayed.
+- UI Update
+- Save user task
 
 # Tech Stack
 - Swift
 - Swift UI
 
 # Features
+- Support for 3 Actions
+    - Click : Left-click
+    - Move : Move Mouse Cursors
+    - Delay : Apply Delay between the following Actions
 - Manage actions as a list.
-- Can move the mouse cursor location.
-- Click the mouse at the desired location.
-- Delay can be given for each action.
-- You can specify any number of repeats you want.
+    - Allows reordering and deletion within a list
+    - You can repeat the completed list as a whole.
+- Action Recurring Support
+    - 
 - Support shortcut
-- You can enter the location automatically.
-- You can set the number of iterations to infinite.
 
 # Shortcut(Beta)
 - Command + Shift + C = Switch action state between move and click
@@ -100,5 +104,9 @@ Accessibility permission is required for smooth use.
 <p>A help screen</p>
 </div>
 
+# Developer
 
+<a href="https://github.com/wlxo0401/MAutoClick/releases/download/Ver1.1/MAutoClick_1.1.dmg">Download Latest Version</a>
+Kelvin
+https://github.com/kelvinlee
 
