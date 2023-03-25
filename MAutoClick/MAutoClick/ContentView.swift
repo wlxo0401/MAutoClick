@@ -11,7 +11,7 @@ import HotKey
 
 struct ContentView: View {
     // 작업 구조체
-    struct InputUserAction: Hashable {
+    struct InputUserAction: Hashable, Codable {
         let uuid = UUID()
         let locationX: Double
         let locationY: Double
@@ -21,7 +21,7 @@ struct ContentView: View {
     }
 
     // 작업 종류
-    enum ActionType: String {
+    enum ActionType: String, Codable {
         case move
         case click
         case delay
@@ -134,6 +134,14 @@ struct ContentView: View {
         }
         .frame(width: 700, height: 420)
         .onAppear(perform: {
+            do {
+                let user = UserDefaults.standard
+                let content = user.object(forKey: "userTaskList") as? Data
+                let json = try JSONDecoder().decode([InputUserAction].self, from: content!)
+                self.userTaskList = json
+            } catch {
+                
+            }
             self.startAndStopHotKey.keyDownHandler = {
                 
                 DispatchQueue.main.async {
@@ -620,6 +628,12 @@ extension ContentView {
             
             VStack {
                 Button {
+                    self.SaveUserTaskList()
+                } label: {
+                    Text("Save")
+                }
+                
+                Button {
                     guard let uuid = self.selectedItem else { return }
                     for (index, item) in self.userTaskList.enumerated() {
                         if item.uuid == uuid {
@@ -857,6 +871,16 @@ extension ContentView {
         case .delay:
             let second: Double = 1000000
             usleep(useconds_t(action.delay * second))
+        }
+    }
+    
+    private func SaveUserTaskList() {
+        do {
+            let list = try JSONEncoder().encode(self.userTaskList)
+            let user = UserDefaults.standard
+            user.set(list, forKey: "userTaskList")
+        } catch {
+            
         }
     }
 }
