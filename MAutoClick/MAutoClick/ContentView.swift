@@ -134,14 +134,9 @@ struct ContentView: View {
         }
         .frame(width: 700, height: 420)
         .onAppear(perform: {
-            do {
-                let user = UserDefaults.standard
-                let content = user.object(forKey: "userTaskList") as? Data
-                let json = try JSONDecoder().decode([InputUserAction].self, from: content!)
-                self.userTaskList = json
-            } catch {
-                
-            }
+            // Kelvin
+            self.loadUserTaskList()
+            
             self.startAndStopHotKey.keyDownHandler = {
                 
                 DispatchQueue.main.async {
@@ -628,7 +623,7 @@ extension ContentView {
             
             VStack {
                 Button {
-                    self.SaveUserTaskList()
+                    self.saveUserTaskList()
                 } label: {
                     Text("Save")
                 }
@@ -874,7 +869,23 @@ extension ContentView {
         }
     }
     
-    private func SaveUserTaskList() {
+    
+    //MARK: - Kelvin
+    func loadUserTaskList() {
+        let user = UserDefaults.standard
+
+        if let content = user.object(forKey: "userTaskList") as? Data {
+            do {
+                let json = try JSONDecoder().decode([InputUserAction].self, from: content)
+                self.userTaskList = json
+            } catch {
+                
+            }
+        }
+    }
+    
+    //MARK: - Kelvin
+    private func saveUserTaskList() {
         do {
             let list = try JSONEncoder().encode(self.userTaskList)
             let user = UserDefaults.standard

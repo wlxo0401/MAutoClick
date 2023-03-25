@@ -30,6 +30,10 @@ This is a project started to study SwiftUI. Because it is a toy project, there a
 
 Be sure to leave any bugs that occur during use in an issue.
 
+# Update 1.2
+- The 'Start/Stop' shortcut works globally.
+- Each action can be repeated and delayed.
+
 # Tech Stack
 - Swift
 - Swift UI
@@ -44,13 +48,16 @@ Be sure to leave any bugs that occur during use in an issue.
 - You can enter the location automatically.
 - You can set the number of iterations to infinite.
 
-# Shortcut
+# Shortcut(Beta)
 - Command + Shift + C = Switch action state between move and click
 - Command + Shift + A = Adds a set action to the list
 - Command + Shift + D = Adds the set delay to the list
 - Command + Shift + S = Start/Stop Features
 - Command + Shift + L = Loop Mode on/off
 - Command + Shift + P = Auto Location on/off
+
+Other shortcuts except 'Start/Stop' will only work if the OS is focusing on MutoClick.
+
 
 # Caution
 - Tested on 'Apple M1 Pro'.
