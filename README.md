@@ -31,6 +31,7 @@ This is a project started to study SwiftUI. Because it is a toy project, there a
 Be sure to leave any bugs that occur during use in an issue.
 
 # Update 1.2(Beta)
+[DownLoad](https://github.com/wlxo0401/MAutoClick/releases/tag/Ver1.2(B))
 - The 'Start/Stop' shortcut works globally.
 - Each action can be repeated and delayed.
 - UI Update
